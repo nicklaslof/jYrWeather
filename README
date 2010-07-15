@@ -26,6 +26,11 @@ Jdom and JodaTime.
 This library isn't finnished yet but works.
 
 
+Future features to be added:
+
+Possible to add your own cachingenginge in case you can't keep your java program running and you want to store the cached file in a database or similar.
+
+
 /Nicklas Löf
 
 nicklas.lof@bredband.net
