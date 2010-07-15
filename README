@@ -16,6 +16,13 @@ YrForecast contains all forecast data.
 Remember to read the yr.no usage terms at http://www.yr.no/verdata/1.6810075
 
 
+
+Lib dependencies:
+
+Jdom and JodaTime.
+
+
+
 This library isn't finnished yet but works.
 
 
