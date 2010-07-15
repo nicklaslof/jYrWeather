@@ -1,0 +1,25 @@
+Simple java library to access weather data from weather service yr.no
+
+Usage:
+
+See YrRequestProcessorTest for simple usage example.
+
+Remove the URL string argument to send the query to yr.no servers. The URL can be used to query a local copy of a real forecast.xml instead of spamming yr.no servers.
+
+YrRequestProcessor is a singleton instance that is caching the forecast xml files according to the yr.no usage terms so if you keep your java program running the xml-file will be cached and a new copy read when the nextupdate period has been exceeded.
+
+List of Countries, Region and Cities can be found at yr.no
+
+YrResult contains basic data for all forecasts (like creditURL, sunrise, sunset...) and an ArrayList of all the forecasts for each period in YrForecast classes.
+YrForecast contains all forecast data. 
+
+Remember to read the yr.no usage terms at http://www.yr.no/verdata/1.6810075
+
+
+This library isn't finnished yet but works.
+
+
+/Nicklas Löf
+
+nicklas.lof@bredband.net
+
