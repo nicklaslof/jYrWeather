@@ -29,18 +29,11 @@ public class YrRequestProcessor {
     public YrResult getResult(YrRequest request) throws MalformedURLException, IOException, JDOMException {
 
         URL yrUrl = generateYrUrl(request);
-
         Document doc = readDocumentFromCache(yrUrl);
-
         Element weatherdata = doc.getRootElement();
-        DateTime sunrise = new DateTime(weatherdata.getChild("sun").getAttributeValue("rise"));
-        DateTime sunset = new DateTime(weatherdata.getChild("sun").getAttributeValue("set"));
+        YrResult yrResult = createYrResult(weatherdata);
+
         List<Element> children = weatherdata.getChild("forecast").getChild("tabular").getChildren("time");
-        String creditLinkText = weatherdata.getChild("credit").getChild("link").getAttributeValue("text");
-        String creditLinkUrl = weatherdata.getChild("credit").getChild("link").getAttributeValue("url");
-        DateTime lastUpdate = new DateTime(weatherdata.getChild("meta").getChild("lastupdate").getText());
-        DateTime nextUpdate = new DateTime(weatherdata.getChild("meta").getChild("nextupdate").getText());
-        YrResult yrResult = new YrResult(sunrise, sunset, creditLinkText, creditLinkUrl, lastUpdate, nextUpdate);
 
         for (Element element : children) {
             DateTime dt = new DateTime(element.getAttributeValue("from"));
@@ -53,6 +46,17 @@ public class YrRequestProcessor {
 
     private boolean insideRequestInterval(YrRequest request, DateTime dt) {
         return request.getInterval().contains(dt);
+    }
+
+    private YrResult createYrResult(Element weatherdata) {
+        DateTime sunrise = new DateTime(weatherdata.getChild("sun").getAttributeValue("rise"));
+        DateTime sunset = new DateTime(weatherdata.getChild("sun").getAttributeValue("set"));
+
+        String creditLinkText = weatherdata.getChild("credit").getChild("link").getAttributeValue("text");
+        String creditLinkUrl = weatherdata.getChild("credit").getChild("link").getAttributeValue("url");
+        DateTime lastUpdate = new DateTime(weatherdata.getChild("meta").getChild("lastupdate").getText());
+        DateTime nextUpdate = new DateTime(weatherdata.getChild("meta").getChild("nextupdate").getText());
+        return new YrResult(sunrise, sunset, creditLinkText, creditLinkUrl, lastUpdate, nextUpdate);
     }
 
     private URL generateYrUrl(YrRequest query) throws MalformedURLException {
