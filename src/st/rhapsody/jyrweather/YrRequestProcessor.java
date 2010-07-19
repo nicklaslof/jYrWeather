@@ -31,14 +31,14 @@ public class YrRequestProcessor {
         URL yrUrl = generateYrUrl(request);
         Document doc = readDocumentFromCache(yrUrl);
         Element weatherdata = doc.getRootElement();
-        YrResult yrResult = createYrResult(weatherdata);
+        YrResult yrResult = new YrResult(weatherdata);
 
         List<Element> children = weatherdata.getChild("forecast").getChild("tabular").getChildren("time");
 
         for (Element element : children) {
             DateTime dt = new DateTime(element.getAttributeValue("from"));
             if (insideRequestInterval(request, dt)) {
-                populateListWithWeatherData(element, request, yrResult);
+                populateResultWithForecast(element, yrResult);
             }
         }
         return yrResult;
@@ -46,17 +46,6 @@ public class YrRequestProcessor {
 
     private boolean insideRequestInterval(YrRequest request, DateTime dt) {
         return request.getInterval().contains(dt);
-    }
-
-    private YrResult createYrResult(Element weatherdata) {
-        DateTime sunrise = new DateTime(weatherdata.getChild("sun").getAttributeValue("rise"));
-        DateTime sunset = new DateTime(weatherdata.getChild("sun").getAttributeValue("set"));
-
-        String creditLinkText = weatherdata.getChild("credit").getChild("link").getAttributeValue("text");
-        String creditLinkUrl = weatherdata.getChild("credit").getChild("link").getAttributeValue("url");
-        DateTime lastUpdate = new DateTime(weatherdata.getChild("meta").getChild("lastupdate").getText());
-        DateTime nextUpdate = new DateTime(weatherdata.getChild("meta").getChild("nextupdate").getText());
-        return new YrResult(sunrise, sunset, creditLinkText, creditLinkUrl, lastUpdate, nextUpdate);
     }
 
     private URL generateYrUrl(YrRequest query) throws MalformedURLException {
@@ -82,24 +71,18 @@ public class YrRequestProcessor {
         return doc;
     }
 
-    private void populateListWithWeatherData(Element element, YrRequest yrRequest, YrResult yrResult) throws NumberFormatException {
-        DateTime from = new DateTime(element.getAttributeValue("from"));
-        DateTime to = new DateTime(element.getAttributeValue("from"));
-        String forecast = element.getChild("symbol").getAttributeValue("name");
-        int symbol = Integer.valueOf(element.getChild("symbol").getAttributeValue("number"));
-        float windDirectionDeg = Float.valueOf(element.getChild("windDirection").getAttributeValue("deg"));
-        String windDirectionCode = element.getChild("windDirection").getAttributeValue("code");
-        String windDirectonName = element.getChild("windDirection").getAttributeValue("name");
-        float windSpeed = Float.valueOf(element.getChild("windSpeed").getAttributeValue("mps"));
-        String windName = element.getChild("windSpeed").getAttributeValue("name");
-        String temperatureUnit = element.getChild("temperature").getAttributeValue("unit");
-        int temperature = Integer.valueOf(element.getChild("temperature").getAttributeValue("value"));
-        String pressureUnit = element.getChild("pressure").getAttributeValue("unit");
-        float pressureValue = Float.valueOf(element.getChild("pressure").getAttributeValue("value"));
-        float precipitation = Float.valueOf(element.getChild("precipitation").getAttributeValue("value"));
+    private void populateResultWithForecast(Element element, YrResult yrResult) throws NumberFormatException {
+        yrResult.addYrForecast(new YrForecast(element));
+    }
 
-        YrForecast yrForecast = new YrForecast(yrRequest, forecast, symbol, windDirectionDeg, windDirectionCode, windDirectonName, windSpeed, windName, pressureUnit, pressureValue, precipitation, temperature, temperatureUnit, from, to);
-        yrResult.addYrForecast(yrForecast);
+    static String getXMLValue(Element element, String attribute, String... childs) {
+        Element elementChild = element;
+        if (childs != null) {
+            for (String string : childs) {
+                elementChild = elementChild.getChild(string);
+            }
+        }
+        return elementChild.getAttributeValue(attribute);
     }
 
     private Document getNewDocument(URL url) throws IOException, JDOMException {

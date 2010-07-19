@@ -1,10 +1,11 @@
 package st.rhapsody.jyrweather;
 
+import org.jdom.Element;
 import org.joda.time.DateTime;
 
 public class YrForecast {
 
-    private final YrRequest yrRequest;
+
     private final String forecast;
     private final int symbol;
     private final float windDirectionDeg;
@@ -20,23 +21,21 @@ public class YrForecast {
     private final DateTime validFrom;
     private final DateTime validTo;
 
-
-    YrForecast(YrRequest yrRequest, String forecast, int symbol, float windDirectionDeg, String windDirectionCode, String windDirectionName, float windSpeed, String windName, String pressureUnit, Float pressureValue, float precipitation, int temperature,String temperatureUnit, DateTime validFrom, DateTime validTo) {
-        this.yrRequest = yrRequest;
-        this.forecast = forecast;
-        this.symbol = symbol;
-        this.windDirectionDeg = windDirectionDeg;
-        this.windDirectionCode = windDirectionCode;
-        this.windDirectionName = windDirectionName;
-        this.windSpeed = windSpeed;
-        this.windName = windName;
-        this.pressureUnit = pressureUnit;
-        this.pressureValue = pressureValue;
-        this.precipitation = precipitation;
-        this.temperature = temperature;
-        this.temperatureUnit = temperatureUnit;
-        this.validFrom = validFrom;
-        this.validTo = validTo;
+    YrForecast(Element weatherdata) {
+        validFrom = new DateTime(weatherdata.getAttributeValue("from"));
+        validTo = new DateTime(weatherdata.getAttributeValue("to"));
+        forecast = YrRequestProcessor.getXMLValue(weatherdata, "name", "symbol");
+        symbol = Integer.valueOf(YrRequestProcessor.getXMLValue(weatherdata, "number", "symbol"));
+        windDirectionDeg = Float.valueOf(YrRequestProcessor.getXMLValue(weatherdata, "deg", "windDirection"));
+        windDirectionCode = YrRequestProcessor.getXMLValue(weatherdata, "code", "windDirection");
+        windDirectionName = YrRequestProcessor.getXMLValue(weatherdata, "name", "windDirection");
+        windSpeed = Float.valueOf(YrRequestProcessor.getXMLValue(weatherdata, "mps", "windSpeed"));
+        windName = YrRequestProcessor.getXMLValue(weatherdata, "name", "windSpeed");
+        temperatureUnit = YrRequestProcessor.getXMLValue(weatherdata, "unit", "temperature");
+        temperature = Integer.valueOf(YrRequestProcessor.getXMLValue(weatherdata, "value", "temperature"));
+        pressureUnit = YrRequestProcessor.getXMLValue(weatherdata, "unit", "pressure");
+        pressureValue = Float.valueOf(YrRequestProcessor.getXMLValue(weatherdata, "value", "pressure"));
+        precipitation = Float.valueOf(YrRequestProcessor.getXMLValue(weatherdata, "value", "precipitation"));
     }
 
     public String getForecast() {
@@ -91,12 +90,8 @@ public class YrForecast {
         return windSpeed;
     }
 
-    public YrRequest getYrRequest() {
-        return yrRequest;
-    }
-
     @Override
     public String toString() {
-        return "YrForecast{" + "yrRequest=" + yrRequest + "forecast=" + forecast + "symbol=" + symbol + "windDirectionDeg=" + windDirectionDeg + "windDirectionCode=" + windDirectionCode + "windDirectionName=" + windDirectionName + "windSpeed=" + windSpeed + "windName=" + windName + "pressureUnit=" + pressureUnit + "pressureValue=" + pressureValue + "precipitation=" + precipitation + "temperature=" + temperature + "temperatureUnit=" + temperatureUnit + "validFrom=" + validFrom + "validTo=" + validTo + '}';
+        return "YrForecast{" + "forecast=" + forecast + "symbol=" + symbol + "windDirectionDeg=" + windDirectionDeg + "windDirectionCode=" + windDirectionCode + "windDirectionName=" + windDirectionName + "windSpeed=" + windSpeed + "windName=" + windName + "pressureUnit=" + pressureUnit + "pressureValue=" + pressureValue + "precipitation=" + precipitation + "temperature=" + temperature + "temperatureUnit=" + temperatureUnit + "validFrom=" + validFrom + "validTo=" + validTo + '}';
     }
 }

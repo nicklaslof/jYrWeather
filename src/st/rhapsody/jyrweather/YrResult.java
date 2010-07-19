@@ -6,6 +6,7 @@ package st.rhapsody.jyrweather;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jdom.Element;
 import org.joda.time.DateTime;
 
 /**
@@ -22,13 +23,16 @@ public class YrResult {
     private final DateTime lastUpdate;
     private final DateTime nextUpdate;
 
-    YrResult(DateTime sunrise, DateTime sunset, String creditLinkText, String creditLinkUrl, DateTime lastUpdate, DateTime nextUpdate) {
-        this.sunrise = sunrise;
-        this.sunset = sunset;
-        this.creditLinkText = creditLinkText;
-        this.creditLinkUrl = creditLinkUrl;
-        this.lastUpdate = lastUpdate;
-        this.nextUpdate = nextUpdate;
+    YrResult(Element weatherdata) {
+
+        sunrise = new DateTime(YrRequestProcessor.getXMLValue(weatherdata, "rise", "sun"));
+        sunset = new DateTime(YrRequestProcessor.getXMLValue(weatherdata, "set", "sun"));
+
+        creditLinkText = YrRequestProcessor.getXMLValue(weatherdata, "text", "credit", "link");
+        creditLinkUrl = YrRequestProcessor.getXMLValue(weatherdata, "url", "credit", "link");
+
+        lastUpdate = new DateTime(weatherdata.getChild("meta").getChild("lastupdate").getText());
+        nextUpdate = new DateTime(weatherdata.getChild("meta").getChild("nextupdate").getText());
     }
 
     public String getCreditLinkText() {
@@ -59,7 +63,7 @@ public class YrResult {
         return sunset;
     }
 
-    public void addYrForecast(YrForecast yrForecast){
+    public void addYrForecast(YrForecast yrForecast) {
         this.forecasts.add(yrForecast);
     }
 
@@ -67,6 +71,4 @@ public class YrResult {
     public String toString() {
         return "YrResult{" + "forecasts=" + forecasts + "sunrise=" + sunrise + "sunset=" + sunset + "creditLinkText=" + creditLinkText + "creditLinkUrl=" + creditLinkUrl + "lastUpdate=" + lastUpdate + "nextUpdate=" + nextUpdate + '}';
     }
-
-    
 }
