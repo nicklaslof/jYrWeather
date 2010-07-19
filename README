@@ -19,7 +19,7 @@ Remember to read the yr.no usage terms at http://www.yr.no/verdata/1.6810075
 
 Lib dependencies:
 
-Jdom and JodaTime.
+Jdom ( http://www.jdom.org/downloads/index.html ) and JodaTime ( http://sourceforge.net/projects/joda-time/files/joda-time/ ).
 
 
 
@@ -28,7 +28,7 @@ This library isn't finnished yet but works.
 
 Future features to be added:
 
-Possible to add your own cachingenginge in case you can't keep your java program running and you want to store the cached file in a database or similar.
+Possible to add your own cache enginge in case you can't keep your java program running and you want to store the cached file in a database or similar.
 
 
 /Nicklas Löf
