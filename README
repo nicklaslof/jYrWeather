@@ -1,12 +1,14 @@
 Simple java library to access weather data from weather service yr.no
 
+This lib uses the simple XML-file and location based implementation of the weather data at http://www.yr.no/place/Country/Region/City/forecast.xml and not api.yr.no.
+
 Usage:
 
 See YrRequestProcessorTest for simple usage example.
 
 Remove the URL string argument to send the query to yr.no servers. The URL can be used to query a local copy of a real forecast.xml instead of spamming yr.no servers.
 
-YrRequestProcessor is a singleton instance that is caching the forecast xml files according to the yr.no usage terms so if you keep your java program running the xml-file will be cached and a new copy read when the nextupdate period has been exceeded.
+YrRequestProcessor is a singleton instance that is caching the forecast xml files according to the yr.no usage terms so if you keep your java program running the xml-file will be cached and a new copy read when the nextupdate period has been exceeded. It's possible to add your own caching, see below.
 
 List of Countries, Region and Cities can be found at yr.no
 
@@ -15,6 +17,9 @@ YrForecast contains all forecast data.
 
 Remember to read the yr.no usage terms at http://www.yr.no/verdata/1.6810075
 
+
+This lib features a working caching engine for the XML-files but in case you need to use your own way to store the cached documents (for example memcached, sql, local files) it's now possible.
+Just create a class that implements the CacheEngine interface, add your caching code to the readDocumentFromCache(URL url) method and pass it to the getResult method of the YrRequestProcessor.
 
 
 Lib dependencies:
@@ -26,12 +31,8 @@ Jdom ( http://www.jdom.org/downloads/index.html ) and JodaTime ( http://sourcefo
 This library isn't finnished yet but works.
 
 
-Future features to be added:
 
-Possible to add your own cache enginge in case you can't keep your java program running and you want to store the cached file in a database or similar.
-
-
-/Nicklas Löf
+/Nicklas Lof
 
 nicklas.lof@bredband.net
 
