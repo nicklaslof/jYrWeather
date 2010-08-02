@@ -1,5 +1,7 @@
 Simple java library to access weather data from weather service yr.no
 
+
+
 This lib uses the simple XML-file and location based implementation of the weather data at http://www.yr.no/place/Country/Region/City/forecast.xml and not api.yr.no.
 
 Usage:
