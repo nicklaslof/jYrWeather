@@ -9,7 +9,6 @@ public class YrRequest {
     private final String city;
     private final String region;
     private final Interval interval;
-    private final int count;
     private String customUrl;
 
     public YrRequest(String country, String city, String region, int days) {
@@ -17,7 +16,6 @@ public class YrRequest {
         this.city = city;
         this.region = region;
         this.interval = generateInterval(days);
-        this.count = days;
     }
 
     public YrRequest(String country, String city, String region, int days, String customUrl) {
@@ -25,7 +23,6 @@ public class YrRequest {
         this.city = city;
         this.region = region;
         this.interval = generateInterval(days);
-        this.count = days;
         this.customUrl = customUrl;
     }
 
@@ -47,10 +44,6 @@ public class YrRequest {
 
     public String getRegion() {
         return region;
-    }
-
-    public int getCount() {
-        return count;
     }
 
     public String getCustomUrl() {

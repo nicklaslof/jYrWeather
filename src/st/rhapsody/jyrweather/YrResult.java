@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package st.rhapsody.jyrweather;
 
 import java.util.ArrayList;
@@ -9,10 +5,6 @@ import java.util.List;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 
-/**
- *
- * @author nicklas
- */
 public class YrResult {
 
     private final List<YrForecast> forecasts = new ArrayList<YrForecast>();
@@ -33,6 +25,10 @@ public class YrResult {
 
         lastUpdate = new DateTime(weatherdata.getChild("meta").getChild("lastupdate").getText());
         nextUpdate = new DateTime(weatherdata.getChild("meta").getChild("nextupdate").getText());
+    }
+
+    public Boolean isEmpty(){
+        return forecasts.isEmpty();
     }
 
     public String getCreditLinkText() {
@@ -63,7 +59,7 @@ public class YrResult {
         return sunset;
     }
 
-    public void addYrForecast(YrForecast yrForecast) {
+    void addYrForecast(YrForecast yrForecast) {
         this.forecasts.add(yrForecast);
     }
 
